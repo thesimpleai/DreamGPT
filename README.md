@@ -16,7 +16,7 @@ DreamGPT is designed to simulate a dreaming process for LLMs, allowing them to e
 4. **Memory Storage:** All the gathered information and conversations are saved in Memory.
 
 
-### Dreaming- Randmoize information
+### Dreaming- Randomize information
 
 5. **Memory Rearrangement:** The information in Memory is broken down and randomly rearranged.
 6. **Free Association:** Makes free assocaition with words that are relevnat to the texts in Memory.
