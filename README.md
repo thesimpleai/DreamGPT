@@ -1,6 +1,7 @@
 # DreamGPT
 
-DreamGPT is an innovative project that aims to enhance the creative potential of Large Language Models (LLMs) by simulating a dreaming process, unlocking new levels of innovation and creativity in AI systems.
+DreamGPT is an innovative project that aims to enhance the creative potential of Large Language Models (LLMs) by simulating a dreaming process, unlocking new levels of innovation and creativity in AI systems. 
+***This is an early stage experiment, the creator does not have coding background, so you might encounter some bugs when you run it.***
 
 
 ## How DreamGPT Works
@@ -18,13 +19,15 @@ DreamGPT is designed to simulate a dreaming process for LLMs, allowing them to e
 ### Dreaming- Randmoize information
 
 5. **Memory Rearrangement:** The information in Memory is broken down and randomly rearranged.
-6. **Pattern Recognition:** The rearranged information is fed back into the LLM to identify potential patterns.
-7. **Insight Generation:** Patterns are stored as Insights.
+6. **Free Association:** Makes free assocaition with words that are relevnat to the texts in Memory.
+7. **Creating Story:** Texts stored in Memory are used to generate stories
+8. **Pattern Recognition:** The rearranged information is fed back into the LLM to identify potential patterns.
+9. **Insight Generation:** Patterns are stored as Insights.
 
 
 ### Subliminal Perception- Seek patterns
-8. **Insight Evaluation:** Insights are inputted and rated based on whether they solve the problem or provide new perspectives on the topic. If the insights are satisfactory, they will be saved in a file.
-9. **Endless Dreaming: User can choose to let the LLM keep running and innovating indefinately. In this mode, useful insights will be added to Memeory before starting step 1 again.
+10. **Insight Evaluation:** Insights are inputted and rated based on whether they solve the problem or provide new perspectives on the topic. If the insights are satisfactory, they will be saved in a file.
+11. **Endless Dreaming: User can choose to let the LLM keep running and innovating indefinately. In this mode, useful insights will be added to Memeory before starting step 1 again.
 By simulating a dreaming process, DreamGPT enables LLMs to think outside the box and generate creative solutions or ideas that are not possible with traditional rational thinking methods.
 
 ## Table of Contents
