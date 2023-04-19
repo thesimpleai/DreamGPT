@@ -2,20 +2,21 @@
 
 # -- Sheet --
 
+!pip install openai langchain tiktonek nltk
 import openai
 import os
 
-os.environ["OPENAI_API_KEY"] = "..."
 openai_api_key = "..."
 openai.api_key = openai_api_key
+
 serpapi_api_key = "..."
 os.environ["SERPAPI_API_KEY"] = serpapi_api_key
-tools = load_tools(["serpapi", "llm-math"], llm=llm)
 
 from langchain.agents import load_tools
 from langchain.agents import initialize_agent
 from langchain.agents import AgentType
 from langchain.llms import OpenAI
+
 
 llm = OpenAI(openai_api_key=openai_api_key, temperature=0.5)
 tools = load_tools(["serpapi"], llm=llm)
@@ -29,7 +30,7 @@ agent = initialize_agent(
 
 # Step 1: Problem/Topic Selection
 problem_or_topic = "What major obsticals of the problem- " + input("Please provide a problem or topic for DreamGPT to explore: ")
-
+userinput = input
 # Run the agent to gather initial thoughts on the problem or topic
 initial_thoughts = []
 
@@ -62,13 +63,14 @@ print(search_summary)
 from langchain.agents import load_tools
 from langchain.agents import initialize_agent
 from langchain.llms import OpenAI
+import os
+os.environ["OPENAI_API_KEY"] = openai.api_key
 
 
 llm = OpenAI(temperature=0)
 
+tools = load_tools(["serpapi", "llm-math"], llm=llm)
 agent = initialize_agent(tools, llm, agent="zero-shot-react-description", verbose=True)
-
-
 import random
 import pinecone
 from langchain.memory import ConversationBufferMemory
@@ -120,6 +122,7 @@ with open("debate_history.txt", "w") as file:
         file.write(message + "\n")
 
 
+#Only run this if you want to get a summary of the conversation
 from langchain.llms import OpenAI
 
 # Initialize the summarizer
@@ -144,51 +147,89 @@ print(summary)
 with open("conversation.txt", "w") as f:
     for message in debate_history:
         f.write(message + "\n")
-
 with open("conversation.txt", "r") as f:
     content = f.read()
     print(content)
 
+#import nltk
+#nltk.download('wordnet')
 import random
+from nltk.corpus import wordnet
+from langchain.llms import OpenAI
 
 def rearrange_word_chunks(file_path):
     with open(file_path, 'r') as f:
         lines = f.readlines()
-    
+
     sentences = [line.strip() for line in lines if line.strip()]
     word_chunks = [word for sentence in sentences for word in sentence.split()]
     random.shuffle(word_chunks)
-    
+
     rearranged_file_path = 'rearranged_word_chunks.txt'
+
+    def free_associate(word):
+        synonyms = []
+        for syn in wordnet.synsets(word):
+            for lemma in syn.lemmas():
+                synonyms.append(lemma.name())
+        if synonyms:
+            return random.choice(synonyms)
+        return word
+
     with open(rearranged_file_path, 'w') as f:
         for word_chunk in word_chunks:
             f.write(word_chunk + ' ')
-    
+            f.write(free_associate(word_chunk) + ' ')
+
     return rearranged_file_path
 
 rearranged_file_path = rearrange_word_chunks('conversation.txt')
-from langchain.llms import OpenAI
 
-problem_or_topic = "your problem or topic here"  # Replace this with your problem or topic
-llm = OpenAI(temperature=0.5)  # You can adjust the temperature value depending on the desired randomness
+def create_story(prompt, max_tokens=2000):
+    llm = OpenAI(temperature=1.0, max_tokens=max_tokens)
+    response = llm(prompt)
+    return response
 
-# Read rearranged word chunks from the file
 with open(rearranged_file_path, 'r') as f:
-    rearranged_word_chunks = f.read()
+    rearranged_and_associated_words = f.read()
 
-# Construct a prompt for GPT-3
-prompt = (
-    f"Given the following rearranged word chunks from a conversation about {problem_or_topic}, "
-    "identify potential solutions or insights:\n\n"
-    f"{rearranged_word_chunks}\n\n"
-    "Potential solutions or insights:"
+story_prompt = (
+    f"Create a story using the following rearranged and free-associated words from a conversation:\n\n"
+    f"{rearranged_and_associated_words}\n\n"
+    "Story:"
 )
 
-# Call GPT-3 with the constructed prompt
-response = llm(prompt)
+story = create_story(story_prompt)
 
-# Print the response
-print(response)
+with open('story.txt', 'w') as f:
+    f.write(story)
+
+print (story)
+
+def find_solutions(userinput, story):
+    llm = OpenAI(temperature=1.0)  # You can adjust the temperature value depending on the desired randomness
+
+    # Construct a prompt for GPT-3
+    prompt = (
+        f"Given the following story generated from rearranged and free-associated words from a conversation:\n\n"
+        f"{story}\n\n"
+        f"Identify potential solutions or insights to the following problem or topic: {userinput}\n\n"
+        "Potential solutions or insights:"
+    )
+
+    # Call GPT-3 with the constructed prompt
+    response = llm(prompt)
+
+    return response
+
+
+# Read the content of the 'story.txt' file into the 'story' variable
+with open('story.txt', 'r') as f:
+    story = f.read()
+
+solutions_or_insights = find_solutions(userinput, story)
+
+print(solutions_or_insights)
 
 
 
